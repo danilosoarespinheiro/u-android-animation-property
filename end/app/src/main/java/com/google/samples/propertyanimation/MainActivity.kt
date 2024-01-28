@@ -17,8 +17,8 @@
 package com.google.samples.propertyanimation
 
 import android.animation.*
+import android.annotation.SuppressLint
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +27,9 @@ import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
+import com.google.samples.R
 
 
 class MainActivity : AppCompatActivity() {
@@ -45,36 +47,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         star = findViewById(R.id.star)
-        rotateButton = findViewById<Button>(R.id.rotateButton)
-        translateButton = findViewById<Button>(R.id.translateButton)
-        scaleButton = findViewById<Button>(R.id.scaleButton)
-        fadeButton = findViewById<Button>(R.id.fadeButton)
-        colorizeButton = findViewById<Button>(R.id.colorizeButton)
-        showerButton = findViewById<Button>(R.id.showerButton)
+        rotateButton = findViewById(R.id.rotateButton)
+        translateButton = findViewById(R.id.translateButton)
+        scaleButton = findViewById(R.id.scaleButton)
+        fadeButton = findViewById(R.id.fadeButton)
+        colorizeButton = findViewById(R.id.colorizeButton)
+        showerButton = findViewById(R.id.showerButton)
 
-        rotateButton.setOnClickListener {
-            rotater()
-        }
+        rotateButton.setOnClickListener { rotater() }
 
-        translateButton.setOnClickListener {
-            translater()
-        }
+        translateButton.setOnClickListener { translater() }
 
-        scaleButton.setOnClickListener {
-            scaler()
-        }
+        scaleButton.setOnClickListener { scaler() }
 
-        fadeButton.setOnClickListener {
-            fader()
-        }
+        fadeButton.setOnClickListener { fader() }
 
-        colorizeButton.setOnClickListener {
-            colorizer()
-        }
+        colorizeButton.setOnClickListener { colorizer() }
 
-        showerButton.setOnClickListener {
-            shower()
-        }
+        showerButton.setOnClickListener { shower() }
     }
 
     private fun rotater() {
@@ -122,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         animator.start()
     }
 
+    @SuppressLint("ObjectAnimatorBinding")
     private fun colorizer() {
 
         // Animate the color of the star's container from black to red over a half
@@ -129,8 +120,10 @@ class MainActivity : AppCompatActivity() {
         // "backgroundColor" will cause the animator to call the backgroundColor property
         // (in Kotlin) or setBackgroundColor(int) (in Java).
 
-        var animator = ObjectAnimator.ofArgb(star.parent,
-            "backgroundColor", Color.BLACK, Color.RED)
+        val animator = ObjectAnimator.ofArgb(
+            star.parent,
+            "backgroundColor", Color.BLACK, Color.RED
+        )
         animator.setDuration(500)
         animator.repeatCount = 1
         animator.repeatMode = ObjectAnimator.REVERSE
@@ -153,8 +146,10 @@ class MainActivity : AppCompatActivity() {
         // Create the new star (an ImageView holding our drawable) and add it to the container
         val newStar = AppCompatImageView(this)
         newStar.setImageResource(R.drawable.ic_star)
-        newStar.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT)
+        newStar.layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        )
         container.addView(newStar)
 
         // Scale the view randomly between 10-160% of its default size
@@ -173,8 +168,10 @@ class MainActivity : AppCompatActivity() {
         mover.interpolator = AccelerateInterpolator(1f)
 
         // Create an animator to rotateButton the view around its center up to three times
-        val rotator = ObjectAnimator.ofFloat(newStar, View.ROTATION,
-            (Math.random() * 1080).toFloat())
+        val rotator = ObjectAnimator.ofFloat(
+            newStar, View.ROTATION,
+            (Math.random() * 1080).toFloat()
+        )
         rotator.interpolator = LinearInterpolator()
 
         // Use an AnimatorSet to play the falling and rotating animators in parallel for a duration
@@ -185,7 +182,7 @@ class MainActivity : AppCompatActivity() {
 
         // When the animation is done, remove the created view from the container
         set.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 container.removeView(newStar)
             }
         })
@@ -200,11 +197,11 @@ class MainActivity : AppCompatActivity() {
         // the given view for the entirety of that animation.
 
         addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationStart(animation: Animator) {
                 view.isEnabled = false
             }
 
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 view.isEnabled = true
             }
         })
